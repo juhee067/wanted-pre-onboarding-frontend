@@ -1,4 +1,5 @@
 import React from "react";
+import "./todolist.scss";
 const TodoList = () => {
   return (
     <div className="todo">
@@ -7,7 +8,6 @@ const TodoList = () => {
         <input data-testid="new-todo-input" />
         <button data-testid="new-todo-add-button">추가</button>
       </div>
-
       <ul>
         <li className="title">
           <span>완료</span>
