@@ -1,7 +1,11 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import "./sign.scss";
 const SignUp = () => {
+  const navigate = useNavigate();
+
   // id/pass data
   let [auth, setAuth] = useState({
     email: "",
@@ -27,13 +31,29 @@ const SignUp = () => {
     setPassNotice(value.length < 8);
   };
 
+  // id/pw data 전송
+  const joinSubmitData = async () => {
+    let body = {
+      email,
+      password,
+    };
+    try {
+      const response = await axios.post(
+        "https://www.pre-onboarding-selection-task.shop/auth/signup",
+        body
+      );
+      console.log(response);
+      navigate("/signin");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // email/password submit
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    if (emailNotice && passNotice) {
-      console.log("성공");
-    } else {
-      console.log("실패");
+    if (!emailNotice && !passNotice) {
+      return joinSubmitData();
     }
   };
 
@@ -78,7 +98,7 @@ const SignUp = () => {
           </button>
         </form>
         <div className="quest signup">
-          이미 회원이신가요? <span>로그인</span>
+          이미 회원이신가요? <Link to={"/signin"}>로그인</Link>
         </div>
       </div>
     </div>
