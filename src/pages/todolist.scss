@@ -1,0 +1,52 @@
+.todo {
+  padding: 100px;
+  button {
+    border: none;
+    background-color: #ffc93d;
+    color: #fff;
+    padding: 15px 20px;
+    cursor: pointer;
+  }
+  .add {
+    margin-bottom: 40px;
+    h1 {
+      margin-bottom: 30px;
+    }
+    input {
+      width: 40%;
+      margin-right: 20px;
+      border: 1px solid #ddd;
+      padding: 15px 10px;
+    }
+  }
+  ul {
+    list-style-type: none;
+    width: 70%;
+    margin: 0 auto;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    .title {
+      border-top: 3px solid #ffc93d;
+      border-bottom: 3px solid #ffc93d;
+      padding: 10px 0;
+      font-weight: bold;
+    }
+    label {
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .checkBox {
+        width: 20px;
+      }
+    }
+  }
+  .edit {
+    button {
+      font-size: 15px;
+      margin-left: 5px;
+      font-weight: bold;
+    }
+  }
+}
