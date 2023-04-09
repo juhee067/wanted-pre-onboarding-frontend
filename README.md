@@ -22,15 +22,33 @@
 
 
 
+https://user-images.githubusercontent.com/66045537/230775475-3cb1f2ce-4575-4abc-986b-93b8f6c908cc.mov
+
+
 
 
 - 회원가입
 
 
 
+https://user-images.githubusercontent.com/66045537/230775478-d0e54623-8967-4a1e-8fa3-2b73520b2bff.mov
+
+
+
 
 - TODO CRUD
-- NOT FOUND
+
+
+https://user-images.githubusercontent.com/66045537/230775484-cd4d7811-8d33-4442-aaea-0ff8798356d3.mov
+
+
+
+- 로그아웃
+
+
+https://user-images.githubusercontent.com/66045537/230775490-8d55a1b4-8f70-46f5-9a83-fbccbd244577.mov
+
+
 
 ---
 
