@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./todolist.scss";
 import { useNavigate } from "react-router-dom";
 import { getAccessToken } from "../modules/Auth";
+import axiosInstance from "../modules/AxiosInstance";
 import axios from "axios";
 
 const TodoList = () => {
@@ -47,16 +48,11 @@ const TodoList = () => {
     };
 
     try {
-      let response = await axios.post(
-        "https://www.pre-onboarding-selection-task.shop/todos",
-        body,
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      let response = await axiosInstance.post("/todos", body, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
 
       setTodoItems((prevList) => [...prevList, { ...response.data }]);
       setInputValue("");
@@ -68,14 +64,11 @@ const TodoList = () => {
   // 삭제
   const onTodoDelete = async (todoId) => {
     try {
-      await axios.delete(
-        `https://www.pre-onboarding-selection-task.shop/todos/${todoId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-      );
+      await axiosInstance.delete(`/todos/${todoId}`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
       setTodoItems((prevList) =>
         prevList.filter((todoItems) => todoItems.id !== todoId)
       );

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
 import "./sign.scss";
 import { getAccessToken } from "../modules/Auth";
+import axiosInstance from "../modules/AxiosInstance";
 const SignUp = () => {
   const navigate = useNavigate();
 
@@ -39,10 +39,7 @@ const SignUp = () => {
       password,
     };
     try {
-      const response = await axios.post(
-        "https://www.pre-onboarding-selection-task.shop/auth/signup",
-        body
-      );
+      const response = await axiosInstance.post("/auth/signup", body);
       console.log(response);
       navigate("/signin");
     } catch (error) {
