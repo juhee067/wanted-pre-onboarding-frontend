@@ -13,7 +13,8 @@ const TodoList = () => {
   let [inputValue, setInputValue] = useState("");
   // todoList 아이템
   let [todoItems, setTodoItems] = useState([]);
-
+  // 수정 활성화 input 창
+  let [inputModifyValue, setInputModifyValue] = useState("");
   // getTodos
   useEffect(() => {
     (async () => {
@@ -101,6 +102,18 @@ const TodoList = () => {
     }
   };
 
+  //수정
+  const onTodoModify = (todoId) => {
+    setInputModifyValue(todoItems.find((item) => item.id === todoId)?.todo);
+    setTodoItems((prevList) =>
+      prevList.map((todo) =>
+        todo.id === todoId
+          ? { ...todo, isModify: true }
+          : { ...todo, isModify: false }
+      )
+    );
+  };
+
   // token redirection
   useEffect(() => {
     const token = getAccessToken();
@@ -138,18 +151,47 @@ const TodoList = () => {
                     onTodoToggle(todoItem.id, todoItem.todo);
                   }}
                 />
-                <span>{todoItem.todo}</span>
-                <div className="edit">
-                  <button data-testid="modify-button">수정</button>
-                  <button
-                    data-testid="delete-button"
-                    onClick={() => {
-                      onTodoDelete(todoItem.id);
-                    }}
-                  >
-                    삭제
-                  </button>
-                </div>
+                {todoItem.isModify ? (
+                  <>
+                    <input
+                      type="text"
+                      className="modifyInput"
+                      value={inputModifyValue}
+                      onChange={(e) => setInputModifyValue(e.target.value)}
+                    />
+                    <div className="edit">
+                      {" "}
+                      <button data-testid="submit-button">제출</button>
+                      <button
+                        className="modifyCancel"
+                        data-testid="cancel-button"
+                      >
+                        취소
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span>{todoItem.todo}</span>
+                    <div className="edit">
+                      {" "}
+                      <button
+                        data-testid="modify-button"
+                        onClick={() => onTodoModify(todoItem.id)}
+                      >
+                        수정
+                      </button>
+                      <button
+                        data-testid="delete-button"
+                        onClick={() => {
+                          onTodoDelete(todoItem.id);
+                        }}
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </>
+                )}
               </label>
             </li>
           );
