@@ -21,13 +21,12 @@
 - 로그인
 
 
-https://user-images.githubusercontent.com/66045537/230771082-9776ebd1-921c-4de7-a300-cd4681084d6d.mov
+
 
 
 - 회원가입
 
 
-https://user-images.githubusercontent.com/66045537/230771092-c409c4cd-78c3-4bb0-98d7-8d5852679495.mov
 
 
 - TODO CRUD
