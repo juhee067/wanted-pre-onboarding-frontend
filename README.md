@@ -4,7 +4,7 @@
 
 #### 원티드 프리온보딩 프론트엔드 과정 선발 과제 수행
 
-배포 링크 :
+배포 링크 : https://juhee067.github.io/wanted-pre-onboarding-frontend/
 
 ---
 
