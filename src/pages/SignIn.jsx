@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./sign.scss";
-import { setAccessToken } from "../modules/Auth";
+import { getAccessToken, setAccessToken } from "../modules/Auth";
 const SignIn = () => {
   const navigate = useNavigate();
   // id/pass data
@@ -55,7 +55,13 @@ const SignIn = () => {
       return getTokens();
     }
   };
-
+  // login 여부에 따른 리다이렉트
+  useEffect(() => {
+    const token = getAccessToken();
+    if (token) {
+      navigate("/todolist");
+    }
+  }, [navigate]);
   return (
     <div className="sign">
       <div className="auth">
