@@ -33,6 +33,7 @@ const TodoList = () => {
       }
     })();
   }, [access_token]);
+
   // input 작성
   const onTodoHandler = (e) => {
     setInputValue(e.currentTarget.value);
@@ -59,6 +60,25 @@ const TodoList = () => {
 
       setTodoItems((prevList) => [...prevList, { ...response.data }]);
       setInputValue("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 삭제
+  const onTodoDelete = async (todoId) => {
+    try {
+      await axios.delete(
+        `https://www.pre-onboarding-selection-task.shop/todos/${todoId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      setTodoItems((prevList) =>
+        prevList.filter((todoItems) => todoItems.id !== todoId)
+      );
     } catch (error) {
       console.log(error);
     }
@@ -98,7 +118,14 @@ const TodoList = () => {
                 <span>{todoItem.todo}</span>
                 <div className="edit">
                   <button data-testid="modify-button">수정</button>
-                  <button data-testid="delete-button">삭제</button>
+                  <button
+                    data-testid="delete-button"
+                    onClick={() => {
+                      onTodoDelete(todoItem.id);
+                    }}
+                  >
+                    삭제
+                  </button>
                 </div>
               </label>
             </li>
