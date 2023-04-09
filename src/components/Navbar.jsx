@@ -25,17 +25,20 @@ const Navbar = () => {
       {" "}
       <ul>
         <li>
-          {token ? (
-            <Link className="link" to={"/signin"} onClick={logoutHandler}>
-              로그아웃
-            </Link>
-          ) : (
-            <li>
-              <Link className="link" to={"/signin"} onClick={loginHandler}>
-                로그인
+          <ul>
+            {" "}
+            {token ? (
+              <Link className="link" to={"/signin"} onClick={logoutHandler}>
+                로그아웃
               </Link>
-            </li>
-          )}
+            ) : (
+              <li>
+                <Link className="link" to={"/signin"} onClick={loginHandler}>
+                  로그인
+                </Link>
+              </li>
+            )}
+          </ul>
         </li>
         <li>
           <Link className="link" to={"/signup"}>

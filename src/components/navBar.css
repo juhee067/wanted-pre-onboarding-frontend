@@ -7,11 +7,11 @@ div > ul {
   list-style-type: none;
   display: flex;
   gap: 20px;
-  li {
-    list-style-type: none;
-  }
-  .link {
-    color: #000;
-    text-decoration: none;
-  }
 }
+div > ul li {
+  list-style-type: none;
+}
+div > ul .link {
+  color: #000;
+  text-decoration: none;
+}/*# sourceMappingURL=navBar.css.map */
