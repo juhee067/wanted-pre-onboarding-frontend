@@ -13,7 +13,8 @@ const TodoList = () => {
   let [inputValue, setInputValue] = useState("");
   // todoList 아이템
   let [todoItems, setTodoItems] = useState([]);
-
+  // 수정 활성화 input 창
+  let [inputModifyValue, setInputModifyValue] = useState("");
   // getTodos
   useEffect(() => {
     (async () => {
@@ -28,7 +29,6 @@ const TodoList = () => {
           }
         );
         setTodoItems([...response.data]);
-        console.log(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -77,6 +77,86 @@ const TodoList = () => {
     }
   };
 
+  // 완료
+  const onTodoToggle = async (todoId, inputValue) => {
+    const body = {
+      todo: inputValue,
+      isCompleted: !todoItems.find((todo) => todo.id === todoId)?.isCompleted,
+    };
+    try {
+      const response = await axiosInstance.put(`/todos/${todoId}`, body, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      setTodoItems((prevList) =>
+        prevList.map((todo) =>
+          todo.id === todoId
+            ? { ...todo, isCompleted: !todo.isCompleted }
+            : todo
+        )
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //수정
+  const onTodoModify = (todoId) => {
+    setInputModifyValue(todoItems.find((item) => item.id === todoId)?.todo);
+    setTodoItems((prevList) =>
+      prevList.map((todo) =>
+        todo.id === todoId
+          ? { ...todo, isModify: true }
+          : { ...todo, isModify: false }
+      )
+    );
+  };
+
+  // 수정 data put 요청
+  const onTodoSubmit = async (todoId) => {
+    const body = {
+      todo: inputModifyValue,
+      isCompleted: todoItems.find((todo) => todo.id === todoId)?.isCompleted,
+    };
+    try {
+      const response = await axiosInstance.put(`/todos/${todoId}`, body, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      setTodoItems((prevList) =>
+        prevList.map((todo) =>
+          todo.id === todoId
+            ? { ...todo, todo: inputModifyValue, isModify: !todo.isModify }
+            : todo
+        )
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // 수정 내용 제출
+  const modifyTodo = (todoItem) => {
+    setTodoItems((prevList) =>
+      prevList.map((t) =>
+        t.id === todoItem.id ? { ...t, todo: inputModifyValue } : t
+      )
+    );
+    onTodoSubmit(todoItem.id);
+  };
+
+  //제출 취소
+  const onTodoModifyCancel = (todoId) => {
+    setTodoItems((prevList) =>
+      prevList.map((todo) =>
+        todo.id === todoId ? { ...todo, isModify: !todo.isModify } : todo
+      )
+    );
+  };
+
   // token redirection
   useEffect(() => {
     const token = getAccessToken();
@@ -100,26 +180,71 @@ const TodoList = () => {
       </div>
       <ul>
         <li className="title">
-          <span>완료</span>
           <span>해야 할 일</span>
         </li>
         {todoItems.map((todoItem) => {
           return (
             <li key={todoItem.id}>
               <label>
-                <input type="checkbox" className="checkBox" />
-                <span>{todoItem.todo}</span>
-                <div className="edit">
-                  <button data-testid="modify-button">수정</button>
-                  <button
-                    data-testid="delete-button"
-                    onClick={() => {
-                      onTodoDelete(todoItem.id);
-                    }}
-                  >
-                    삭제
-                  </button>
-                </div>
+                <input
+                  type="checkbox"
+                  className="checkBox"
+                  checked={todoItem.isCompleted}
+                  onChange={() => {
+                    onTodoToggle(todoItem.id, todoItem.todo);
+                  }}
+                />
+                {todoItem.isModify ? (
+                  <>
+                    <input
+                      type="text"
+                      className="modifyInput"
+                      value={inputModifyValue}
+                      onChange={(e) => setInputModifyValue(e.target.value)}
+                    />
+                    <div className="edit">
+                      {" "}
+                      <button
+                        data-testid="submit-button"
+                        onClick={() => {
+                          modifyTodo(todoItem);
+                        }}
+                      >
+                        제출
+                      </button>
+                      <button
+                        className="modifyCancel"
+                        data-testid="cancel-button"
+                        onClick={() => {
+                          onTodoModifyCancel(todoItem.id);
+                        }}
+                      >
+                        취소
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span>{todoItem.todo}</span>
+                    <div className="edit">
+                      {" "}
+                      <button
+                        data-testid="modify-button"
+                        onClick={() => onTodoModify(todoItem.id)}
+                      >
+                        수정
+                      </button>
+                      <button
+                        data-testid="delete-button"
+                        onClick={() => {
+                          onTodoDelete(todoItem.id);
+                        }}
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </>
+                )}
               </label>
             </li>
           );

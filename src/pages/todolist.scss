@@ -41,8 +41,17 @@
         width: 20px;
       }
     }
+    .modifyInput {
+      width: 50%;
+      border: 1px solid #ffc93d;
+      padding: 10px 10px;
+      margin: 0 auto;
+    }
   }
   .edit {
+    .modifyCancel {
+      background-color: #ddd;
+    }
     button {
       font-size: 15px;
       margin-left: 5px;
