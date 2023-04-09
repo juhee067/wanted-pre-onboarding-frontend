@@ -114,6 +114,40 @@ const TodoList = () => {
     );
   };
 
+  // 수정 data put 요청
+  const onTodoSubmit = async (todoId) => {
+    const body = {
+      todo: inputModifyValue,
+      isCompleted: todoItems.find((todo) => todo.id === todoId)?.isCompleted,
+    };
+    try {
+      const response = await axiosInstance.put(`/todos/${todoId}`, body, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      setTodoItems((prevList) =>
+        prevList.map((todo) =>
+          todo.id === todoId
+            ? { ...todo, todo: inputModifyValue, isModify: !todo.isModify }
+            : todo
+        )
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // 수정 내용 제출
+  const modifyTodo = (todoItem) => {
+    setTodoItems((prevList) =>
+      prevList.map((t) =>
+        t.id === todoItem.id ? { ...t, todo: inputModifyValue } : t
+      )
+    );
+    onTodoSubmit(todoItem.id);
+  };
+
   // token redirection
   useEffect(() => {
     const token = getAccessToken();
@@ -161,7 +195,14 @@ const TodoList = () => {
                     />
                     <div className="edit">
                       {" "}
-                      <button data-testid="submit-button">제출</button>
+                      <button
+                        data-testid="submit-button"
+                        onClick={() => {
+                          modifyTodo(todoItem);
+                        }}
+                      >
+                        제출
+                      </button>
                       <button
                         className="modifyCancel"
                         data-testid="cancel-button"
