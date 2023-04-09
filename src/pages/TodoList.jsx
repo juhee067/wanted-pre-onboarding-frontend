@@ -148,6 +148,15 @@ const TodoList = () => {
     onTodoSubmit(todoItem.id);
   };
 
+  //제출 취소
+  const onTodoModifyCancel = (todoId) => {
+    setTodoItems((prevList) =>
+      prevList.map((todo) =>
+        todo.id === todoId ? { ...todo, isModify: !todo.isModify } : todo
+      )
+    );
+  };
+
   // token redirection
   useEffect(() => {
     const token = getAccessToken();
@@ -206,6 +215,9 @@ const TodoList = () => {
                       <button
                         className="modifyCancel"
                         data-testid="cancel-button"
+                        onClick={() => {
+                          onTodoModifyCancel(todoItem.id);
+                        }}
                       >
                         취소
                       </button>
