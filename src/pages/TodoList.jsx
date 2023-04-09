@@ -15,24 +15,6 @@ const TodoList = () => {
   let [todoItems, setTodoItems] = useState([]);
   // 수정 활성화 input 창
   let [inputModifyValue, setInputModifyValue] = useState("");
-  // getTodos
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await axios.get(
-          "https://www.pre-onboarding-selection-task.shop/todos",
-          {
-            headers: {
-              Authorization: `Bearer ${access_token}`,
-            },
-          }
-        );
-        setTodoItems([...response.data]);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [access_token]);
 
   // input 작성
   const onTodoHandler = (e) => {
@@ -158,10 +140,34 @@ const TodoList = () => {
   };
 
   // token redirection
+  // useEffect(() => {
+  //   const token = getAccessToken();
+  //   if (!token) {
+  //     navigate("/signin");
+  //   }
+  // }, [navigate]);
+
+  // getTodos
   useEffect(() => {
     const token = getAccessToken();
     if (!token) {
       navigate("/signin");
+    } else {
+      (async () => {
+        try {
+          const response = await axios.get(
+            "https://www.pre-onboarding-selection-task.shop/todos",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setTodoItems([...response.data]);
+        } catch (error) {
+          console.log(error);
+        }
+      })();
     }
   }, [navigate]);
   return (
