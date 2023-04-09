@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./sign.scss";
+import { setAccessToken } from "../modules/Auth";
 const SignIn = () => {
   const navigate = useNavigate();
   // id/pass data
@@ -29,7 +30,7 @@ const SignIn = () => {
     setAuth((prevAuth) => ({ ...prevAuth, password: value }));
     setPassNotice(value.length < 8);
   };
-  //userData 전송 & token 받기
+  //id/pw data 전송 & token 받기
   const getTokens = async () => {
     let body = {
       email,
@@ -40,7 +41,8 @@ const SignIn = () => {
         "https://www.pre-onboarding-selection-task.shop/auth/signin",
         body
       );
-      console.log(response);
+      const accessToken = response.data.access_token;
+      setAccessToken(accessToken);
       navigate("/todolist");
     } catch (error) {
       console.error(error);
