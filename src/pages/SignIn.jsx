@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
 import "./sign.scss";
 import { getAccessToken, setAccessToken } from "../modules/Auth";
+import axiosInstance from "../modules/AxiosInstance";
 const SignIn = () => {
   const navigate = useNavigate();
   // id/pass data
@@ -37,10 +37,7 @@ const SignIn = () => {
       password,
     };
     try {
-      const response = await axios.post(
-        "https://www.pre-onboarding-selection-task.shop/auth/signin",
-        body
-      );
+      const response = await axiosInstance.post("/auth/signin", body);
       const accessToken = response.data.access_token;
       setAccessToken(accessToken);
       navigate("/todolist");

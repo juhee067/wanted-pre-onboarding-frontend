@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./todolist.scss";
 import { useNavigate } from "react-router-dom";
 import { getAccessToken } from "../modules/Auth";
+import axiosInstance from "../modules/AxiosInstance";
 import axios from "axios";
 
 const TodoList = () => {
@@ -33,6 +34,7 @@ const TodoList = () => {
       }
     })();
   }, [access_token]);
+
   // input 작성
   const onTodoHandler = (e) => {
     setInputValue(e.currentTarget.value);
@@ -46,19 +48,30 @@ const TodoList = () => {
     };
 
     try {
-      let response = await axios.post(
-        "https://www.pre-onboarding-selection-task.shop/todos",
-        body,
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      let response = await axiosInstance.post("/todos", body, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
 
       setTodoItems((prevList) => [...prevList, { ...response.data }]);
       setInputValue("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 삭제
+  const onTodoDelete = async (todoId) => {
+    try {
+      await axiosInstance.delete(`/todos/${todoId}`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      setTodoItems((prevList) =>
+        prevList.filter((todoItems) => todoItems.id !== todoId)
+      );
     } catch (error) {
       console.log(error);
     }
@@ -98,7 +111,14 @@ const TodoList = () => {
                 <span>{todoItem.todo}</span>
                 <div className="edit">
                   <button data-testid="modify-button">수정</button>
-                  <button data-testid="delete-button">삭제</button>
+                  <button
+                    data-testid="delete-button"
+                    onClick={() => {
+                      onTodoDelete(todoItem.id);
+                    }}
+                  >
+                    삭제
+                  </button>
                 </div>
               </label>
             </li>
