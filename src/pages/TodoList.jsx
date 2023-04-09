@@ -24,7 +24,6 @@ const TodoList = () => {
           {
             headers: {
               Authorization: `Bearer ${access_token}`,
-              "Content-Type": "application/json",
             },
           }
         );
@@ -64,11 +63,14 @@ const TodoList = () => {
   // 삭제
   const onTodoDelete = async (todoId) => {
     try {
-      await axiosInstance.delete(`/todos/${todoId}`, {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      });
+      await axios.delete(
+        `https://www.pre-onboarding-selection-task.shop/todos/${todoId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
       setTodoItems((prevList) =>
         prevList.filter((todoItems) => todoItems.id !== todoId)
       );
