@@ -28,7 +28,6 @@ const TodoList = () => {
           }
         );
         setTodoItems([...response.data]);
-        console.log(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -77,6 +76,31 @@ const TodoList = () => {
     }
   };
 
+  // 완료
+  const onTodoToggle = async (todoId, inputValue) => {
+    const body = {
+      todo: inputValue,
+      isCompleted: !todoItems.find((todo) => todo.id === todoId)?.isCompleted,
+    };
+    try {
+      const response = await axiosInstance.put(`/todos/${todoId}`, body, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      setTodoItems((prevList) =>
+        prevList.map((todo) =>
+          todo.id === todoId
+            ? { ...todo, isCompleted: !todo.isCompleted }
+            : todo
+        )
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // token redirection
   useEffect(() => {
     const token = getAccessToken();
@@ -100,14 +124,20 @@ const TodoList = () => {
       </div>
       <ul>
         <li className="title">
-          <span>완료</span>
           <span>해야 할 일</span>
         </li>
         {todoItems.map((todoItem) => {
           return (
             <li key={todoItem.id}>
               <label>
-                <input type="checkbox" className="checkBox" />
+                <input
+                  type="checkbox"
+                  className="checkBox"
+                  checked={todoItem.isCompleted}
+                  onChange={() => {
+                    onTodoToggle(todoItem.id, todoItem.todo);
+                  }}
+                />
                 <span>{todoItem.todo}</span>
                 <div className="edit">
                   <button data-testid="modify-button">수정</button>
