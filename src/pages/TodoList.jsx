@@ -13,6 +13,26 @@ const TodoList = () => {
   // todoList 아이템
   let [todoItems, setTodoItems] = useState([]);
 
+  // getTodos
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get(
+          "https://www.pre-onboarding-selection-task.shop/todos",
+          {
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setTodoItems([...response.data]);
+        console.log(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [access_token]);
   // input 작성
   const onTodoHandler = (e) => {
     setInputValue(e.currentTarget.value);
@@ -43,6 +63,7 @@ const TodoList = () => {
       console.log(error);
     }
   };
+
   // token redirection
   useEffect(() => {
     const token = getAccessToken();
