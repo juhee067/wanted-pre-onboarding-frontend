@@ -86,7 +86,7 @@ const TodoList = () => {
       isCompleted: !todoItems.find((todo) => todo.id === todoId)?.isCompleted,
     };
     try {
-      const response = await axiosInstance.put(`/todos/${todoId}`, body, {
+      await axiosInstance.put(`/todos/${todoId}`, body, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -98,7 +98,6 @@ const TodoList = () => {
             : todo
         )
       );
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -123,7 +122,7 @@ const TodoList = () => {
       isCompleted: todoItems.find((todo) => todo.id === todoId)?.isCompleted,
     };
     try {
-      const response = await axiosInstance.put(`/todos/${todoId}`, body, {
+      await axiosInstance.put(`/todos/${todoId}`, body, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -135,7 +134,6 @@ const TodoList = () => {
             : todo
         )
       );
-      console.log(response);
     } catch (error) {
       console.log(error);
     }

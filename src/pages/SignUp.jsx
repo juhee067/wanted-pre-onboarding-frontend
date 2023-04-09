@@ -39,8 +39,7 @@ const SignUp = () => {
       password,
     };
     try {
-      const response = await axiosInstance.post("/auth/signup", body);
-      console.log(response);
+      await axiosInstance.post("/auth/signup", body);
       navigate("/signin");
     } catch (error) {
       console.log(error);
