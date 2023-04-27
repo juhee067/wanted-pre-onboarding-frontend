@@ -43,6 +43,7 @@ const PieChartExample = () => {
   const selectedChatRoomIndex = useSelector(
     (state: { selectedRoomIndexSlice: number }) => state.selectedRoomIndexSlice
   );
+  console.log(selectedChatRoomIndex);
 
   const getTwoLettersFromSpeakers = (speakers: string[][]) => {
     let chatRoomNames = [];

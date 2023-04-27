@@ -9,46 +9,83 @@ import {
 import { getTotalChatCounts } from "../pieGraphForSummary/PieGraphForSummary";
 
 const COLORS = ["#FF414D", "#FF8991", "#F7ABB1"];
+let data = [
+  { name: "A", value: 400 },
+  { name: "B", value: 500 },
+];
 
 const Ratio = () => {
   const results = useSelector(
     (state: { analyzedMessagesSlice: AnalyzedMessage[] }) =>
       state.analyzedMessagesSlice
   );
+  const selectedChatRoomIndex = useSelector(
+    (state: { selectedRoomIndexSlice: number }) => state.selectedRoomIndexSlice
+  );
+
+  console.log(selectedChatRoomIndex, "선택한 채팅방 인덱스 ");
   const speakers = getSpeakers(results);
   const chatTime = getChatTimes(results);
   const totalChatCounts = getTotalChatCounts(chatTime);
 
-  // 현재 채팅방 대화자 한명 대화수
+  const selectedChatRoomData = results[selectedChatRoomIndex];
   const speakerTotalChatCounts: Record<string, number> = {};
-
-  for (const chatrooms of results) {
-    Object.values(chatrooms).forEach((chatroom) => {
-      Object.values(chatroom).forEach(
-        (chat: { chatTimes: any; speaker: string }) => {
-          const speaker = chat.speaker;
-          if (!speakerTotalChatCounts[speaker]) {
-            speakerTotalChatCounts[speaker] = 0;
-          }
-          const chatTimes = chat.chatTimes;
-          const chatCounts = chatTimes ? Object.values(chatTimes) : [];
-          const totalChatCount = chatCounts.reduce(
-            (acc, count) => Number(acc) + Number(count),
-            0
-          );
-          speakerTotalChatCounts[speaker] += Number(totalChatCount);
+  Object.values(selectedChatRoomData).forEach((chatroom) => {
+    Object.values(chatroom).forEach(
+      (chat: { chatTimes: any; speaker: string }) => {
+        const speaker = chat.speaker;
+        if (!speakerTotalChatCounts[speaker]) {
+          speakerTotalChatCounts[speaker] = 0;
         }
-      );
-    });
-  }
-  console.log(speakerTotalChatCounts, "한명 당 대화 수");
-  console.log(totalChatCounts, "전체 대화 수");
+        const chatTimes = chat.chatTimes;
+        const chatCounts = chatTimes ? Object.values(chatTimes) : [];
+        const totalChatCount = chatCounts.reduce(
+          (acc, count) => Number(acc) + Number(count),
+          0
+        );
+        speakerTotalChatCounts[speaker] += Number(totalChatCount);
+      }
+    );
+  });
 
-  let data = [
-    { name: speakers[0][0], value: speakerTotalChatCounts[speakers[0][0]] },
-    { name: speakers[0][1], value: speakerTotalChatCounts[speakers[0][1]] },
-  ];
-
+  const totalChatCount = Object.values(speakerTotalChatCounts).reduce(
+    (a: number, b: number) => a + b
+  );
+  const data = Object.entries(speakerTotalChatCounts).map(([name, value]) => ({
+    name,
+    value: Number(((value / totalChatCount) * 100).toFixed(0)),
+  }));
+  // 현재 채팅방 대화자 한명 대화수
+  // let mostSpeakerTotalChatCounts: any = [];
+  // for (const chatrooms of results) {
+  //   const speakerTotalChatCounts: Record<string, number> = {};
+  //   Object.values(chatrooms).forEach((chatroom) => {
+  //     Object.values(chatroom).forEach(
+  //       (chat: { chatTimes: any; speaker: string }) => {
+  //         const speaker = chat.speaker;
+  //         if (!speakerTotalChatCounts[speaker]) {
+  //           speakerTotalChatCounts[speaker] = 0;
+  //         }
+  //         const chatTimes = chat.chatTimes;
+  //         const chatCounts = chatTimes ? Object.values(chatTimes) : [];
+  //         const totalChatCount = chatCounts.reduce(
+  //           (acc, count) => Number(acc) + Number(count),
+  //           0
+  //         );
+  //         speakerTotalChatCounts[speaker] += Number(totalChatCount);
+  //       }
+  //     );
+  //   });
+  //   mostSpeakerTotalChatCounts.push(speakerTotalChatCounts);
+  //   console.log(mostSpeakerTotalChatCounts, "한명 당 대화 수");
+  // }
+  // const data = mostSpeakerTotalChatCounts.flatMap(
+  //   (speakerTotalChatCounts: ArrayLike<unknown> | { [s: string]: unknown }) => {
+  //     return Object.entries(speakerTotalChatCounts).map(([name, value]) => {
+  //       return { name, value };
+  //     });
+  //   }
+  // );
   return (
     <PieChart width={400} height={400}>
       <Pie
@@ -61,7 +98,7 @@ const Ratio = () => {
         labelLine
         label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
       >
-        {data.map((entry, index) => (
+        {data.map((entry: any, index: number) => (
           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
         ))}
       </Pie>
